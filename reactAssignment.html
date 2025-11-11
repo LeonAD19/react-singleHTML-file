@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Assignment — Single HTML (Extra Credit)</title>
+
+  <!-- React & ReactDOM via CDN (UMD builds) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel for in-browser JSX transform (for assignment) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --bg:#0b1020;
+      --card:#111831;
+      --muted:#93a4c8;
+      --text:#e7edff;
+      --accent:#7aa2ff;
+      --accent-2:#a476ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: linear-gradient(180deg,#0b1020,#0b1328);
+      color: var(--text);
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header, footer {
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      width: 900px;
+      margin: 0 auto;
+      padding: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand .logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 20px rgba(122,162,255,0.3);
+    }
+
+    .layout {
+      max-width: 900px;
+      margin: 15px auto 10px;
+      padding: 10px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    footer { width: 35%; }
+
+    .footer-inner {
+      width: 650px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      height: 100%;
+      min-height: 250px;
+    }
+
+    aside.card {
+      margin-top: 0px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .column-title {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #cfe0ff;
+    }
+
+    .button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      color: #08122b;
+      box-shadow: 0 10px 24px rgba(122,162,255,0.35);
+    }
+
+    .button:active { transform: translateY(1px); }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.02);
+      color: #cbd8ff;
+    }
+
+    .stack { display:flex; flex-direction:column; gap:8px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    // Clock Component
+    class Clock extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { now: new Date() };
+      }
+
+      componentDidMount() {
+        this._timer = setInterval(() => {
+          this.setState({ now: new Date() });
+        }, 1000);
+      }
+
+      componentWillUnmount() {
+        clearInterval(this._timer);
+      }
+
+      render() {
+        return (
+          <span className="mono pill">{this.state.now.toLocaleTimeString()}</span>
+        );
+      }
+    }
+
+    // Counter Component
+    class Counter extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { count: 0 };
+      }
+
+      increment = () => {
+        this.setState(prev => ({ count: prev.count + 1 }));
+      }
+
+      render() {
+        return (
+          <div className="card stack">
+            <h3 className="column-title">Click Counter</h3>
+            <p className="muted">Click the button to increase the count.</p>
+            <button className="button" onClick={this.increment}>
+              Clicked {this.state.count} time{this.state.count === 1 ? '' : 's'}
+            </button>
+            <small className="muted">
+              Component: <span className="mono">Counter</span> (class)
+            </small>
+          </div>
+        );
+      }
+    }
+
+    // Header
+    function Header() {
+      return (
+        <header>
+          <div className="header-inner">
+            <div className="brand">
+              <div className="logo"></div>
+              <h1>React Assignment Layout</h1>
+            </div>
+            <div className="muted">Current Time: <Clock /></div>
+          </div>
+        </header>
+      );
+    }
+
+    // Left Column
+    function LeftColumn() {
+      return (
+        <aside className="card stack left">
+          <h3 className="column-title">Left Column</h3>
+          <p className="muted">This is the left column content.</p>
+          <Counter />
+        </aside>
+      );
+    }
+
+    // Right Column
+    function RightColumn() {
+      return (
+        <main className="right-column stack">
+          <div className="card stack">
+            <h3 className="column-title">Right Column</h3>
+            <p className="muted">This is the right column content</p>
+
+            <div className="grid">
+              <div className="card">
+                <h4>About</h4>
+                <p className="muted">This file uses React via CDN + Babel.</p>
+              </div>
+
+              <div className="card">
+                <h4>Tips</h4>
+                <ol className="muted">
+                  <li>Open directly in a browser.</li>
+                  <li>View source to see components.</li>
+                  <li>Swap to production builds later.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </main>
+      );
+    }
+
+    // Footer
+    function Footer() {
+      return (
+        <footer>
+          <div className="footer-inner">
+            <span className="muted">Footer — React single file demo</span>
+            <span className="muted">
+              Built with <span className="mono">Header</span>, <span className="mono">RightColumn</span>, <span className="mono">LeftColumn</span>, <span className="mono">Clock</span> & <span className="mono">Counter</span>
+            </span>
+          </div>
+        </footer>
+      );
+    }
+
+    // App Root
+    function App() {
+      return (
+        <div className="page">
+          <Header />
+          <div className="layout">
+            <LeftColumn />
+            <RightColumn />
+          </div>
+          <Footer />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+</body>
+</html>
