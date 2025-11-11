@@ -1,8 +1,8 @@
 # React Single File Layout Assignment
-Name: Leon Altamirano
-Course: CS 3320 Web Development
-Professor: Rick King
-Semester: Fall 2025
+**Name:** Leon Altamirano  
+**Course:** CS 3320 — Web Development  
+**Professor:** Rick King  
+**Semester:** Fall 2025
 
 This project is a simple React layout demo built **without a bundler**.  
 All components, JSX, and styling are contained in a single HTML file, using **React + ReactDOM via CDN** and **Babel** for in-browser JSX transformation.
